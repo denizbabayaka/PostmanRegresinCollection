@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "a09d6a98-c572-46c8-bdfa-d2a3c02e6a1d",
+		"name": "Regres API Chainning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e536385a-5a07-4dd7-9a2a-bc8f47a01a57",
+						"exec": [
+							"payload= JSON.parse(responseBody);",
+							"var nameValue= payload.name;",
+							"var lastnameValue= payload.lastname;",
+							"var idValue= payload.id;",
+							"",
+							"console.log(\"nameValue : \"+nameValue);",
+							"console.log(\"lastnameValue : \" +lastnameValue);",
+							"console.log(\"idValue : \" + idValue);",
+							"",
+							"pm.environment.set(\"name\", nameValue);",
+							"pm.environment.set(\"lastname\", lastnameValue);",
+							"pm.environment.set(\"job\", payload.job);",
+							"pm.environment.set(\"id\",idValue);",
+							"postman.setNextRequest(\"GetUserList\");",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7c56ea8c-82b1-41ab-9d84-d7b16a8f0ae8",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{name}}\",\n    \"lastname\":\"{{lastname}}\",\n    \"job\": \"{{job}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"payload= JSON.parse(responseBody);",
+							"",
+							"",
+							"",
+							"postman.setNextRequest(null);"
+						],
+						"id": "483933f7-5476-437e-a459-eac4d4b2ba64"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"pm.environment.set(\"name\", \"Holy\");",
+							"pm.environment.set(\"lastname\", \"Moly\");",
+							"pm.environment.set(\"id\", 3);",
+							""
+						],
+						"id": "cc669366-e4c4-4598-af10-6408e91eb4f3"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{name}}\",\n    \"lastname\":\"{{lastname}}\",\n    \"id\": \"{{id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"payload= JSON.parse(responseBody);",
+							"",
+							"var firstname= payload.data[0].first_name;",
+							"var lastname= payload.data[0].last_name;",
+							"var idValue= payload.data[0].id;",
+							"",
+							"console.log(firstname)",
+							"console.log(lastname)",
+							"",
+							"pm.environment.set(\"id\", idValue);",
+							"",
+							"postman.setNextRequest(\"UpdateUser\");"
+						],
+						"id": "46ec6e3b-a083-442c-a9d7-c1c1f56f39d7"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users?page={{page}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "{{page}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSingleUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "205bef66-ed5c-4644-a74b-cf77b1cb74f4",
+						"exec": [
+							"postman.setNextRequest(\"UpdateUser\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3d84c1b4-8fe3-4e9d-82cb-776ef5b78d79",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c93da629-9fdd-4148-9545-fc89931fa6a5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "342285ab-fad2-4561-a3df-d8551a559eda",
+			"key": "page",
+			"value": "1"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
